@@ -1,0 +1,546 @@
+@charset "UTF-8";
+
+/* Navigation Bar Styling */
+.navbar {
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0; /* Add padding around the nav bar */
+    position: sticky; /* Keeps the nav bar at the top on scroll */
+    top: 0; /* Stick to the top */
+    z-index: 1000; /* Make sure it stays above other content */
+}
+
+.navbar ul {
+    list-style-type: none; /* Remove default list styling */
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.navbar ul li {
+    margin: 0 15px; /* Space between links */
+}
+
+.navbar ul li a {
+    text-decoration: none; /* Remove underline */
+    color: white; /* White text color */
+    font-size: 18px;
+    font-family: Arial, sans-serif;
+    transition: color 0.3s; /* Smooth transition on hover */
+}
+
+.navbar ul li a:hover {
+    color: #ffcc00; /* Change color on hover */
+}
+
+#dateTime {
+
+	color: white;
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+
+/* Header Styling */
+.header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	position: sticky;
+	background: rgba(0, 0, 0, 0.85); /* Adjust transparency */
+    color: white; /* White text */
+    text-align: center;
+    padding: 10px 10px; /* Vertical padding */
+    min-height: 150px;
+    width: 100%;
+    font-family: Arial, sans-serif;
+}
+.logo {
+    position: absolute;
+    left: 80px; /* Adjust as needed */
+}
+.logo img{
+	width: 150px;
+	height:auto;
+}
+.title {
+    flex-grow: 1; /* Ensures it takes available space */
+    text-align: center; /* Centers text */
+}
+.header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.header p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+html, body {
+    margin: 0; /* Remove any default margins */
+    padding: 0; /* Remove any default padding */
+    height: 100%; /* Set the body height to the viewport height */  
+    background-image: url('../images/background.jpg'); /* Path to your background image */
+    background-size: cover; /* Scale the image proportionally to cover the entire area */
+    background-repeat: no-repeat; /* Prevent image repetition */
+    background-position: center; /* Center the image */
+    overflow-y: auto; /* Enables vertical scrolling */
+    overflow-x: hidden; /* Hides horizontal scrolling */
+    scroll-behavior: smooth; /* Smooth scrolling */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Full height of the viewport */
+}
+
+.container {
+    flex: 1; /* Expands to push the footer down */
+}
+
+    	.register-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.register-container h2 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+.register-container label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.register-container input {
+    width: 95%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.register-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.register-container button:hover {
+    background-color: #1a252f;
+}
+
+/* Login Styling*/
+    	.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-container h2 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+.login-container label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.login-container input {
+    width: 95%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.login-container button:hover {
+    background-color: #1a252f;
+}
+
+
+.about-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.about-container h2{
+    color: #2c3e50;
+    text-align: center;
+}
+
+.about-container h3 {
+    color: #2c3e50;
+}
+
+.about-container p, .about-container ul {
+    text-align: left;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.about-container ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.contact-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.contact-container h2 {
+    color: #2c3e50;
+}
+
+.contact-container label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.contact-container input {
+    width: 95%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.contact-container textarea {
+    width: 95%;
+    max-width: 95%;
+    min-width: 95%;
+    resize: vetical;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.contact-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.contact-container button:hover {
+    background-color: #1a252f;
+}
+
+
+.search-container {
+    position: absolute;
+    top: 30%; /* Adjust vertical position */
+    left: 5%; /* Adjust horizontal position */
+    width: 25%;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-container h2 {
+    margin-bottom: 20px;
+    color: #333;
+    text-align:center;
+}
+
+.search-container label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.search-container input {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+
+}
+
+.search-container button {
+    display: block;
+    width: 50%;
+    margin: 20px auto; /* Centers the button */
+    padding: 12px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-container button:hover {
+    background-color: #0056b3;
+}
+
+.footer {
+    background: rgba(0, 0, 0, 0.8); /* Adjust transparency */
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+}
+
+.contents{
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Prevents breaking into multiple lines */
+    padding: 10px 20px;
+}
+
+.footer p {
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+}
+
+.footer a {
+    color: #f8b400;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+
+.sidebar {
+    width: 280px;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    position: fixed;  /* Keep it fixed */
+    top: 175px; /* Push it below the header */
+    left: 0;
+    box-sizing: border-box;
+    height: calc(100vh - 150px); /* Full height minus header */
+    overflow-y: auto; /* Allow scrolling if needed */
+    border-right: 5px solid #ffcc00; /* Add an underline separator */
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 15px;
+    text-align: center;
+}
+
+.sidebar ul li a {
+	font-size: 25px;
+    color: #fff;
+    text-decoration: none;
+    display: block;
+}
+
+.sidebar ul li a:hover {
+    color: #ffcc00;
+}
+
+.main-content {
+    margin-left: 250px; /* Adjust according to sidebar width */
+    margin-top: 150px; /* Prevent overlap with header */
+    padding: 30px;
+}
+
+.main-content h2 {
+    color: #333;
+}
+
+.main-content p {
+    font-size: 16px;
+    color: #666;
+}
+
+
+
+
+.custom-heading {
+    width: 100%;
+    position: fixed;
+    top: 175px; /* Adjust as needed */
+    text-align: left;
+    font-size: 28px; /* Adjust size */
+    font-weight: bold;
+    color: white; /* Text color */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 15px 280px;
+    margin: 0;
+    margin-left: 200px;
+    border-bottom: 5px solid #ffcc00; /* Yellow bottom border */
+    background-color: rgba(0, 0, 0, 0.85);
+    color: #ffcc00; /* Matching yellowish color */
+}
+
+
+.form-content {
+    width: 80%;
+    height: 65vh;
+    top: 100px;
+    margin-left: 300px;
+    padding: 20px;
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    
+}
+
+
+.add-train-container {
+    position: absolute;
+    width: 75%;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    
+    
+}
+
+.add-train-container h1 {
+    margin-bottom: 30px;
+    color: #333;
+    text-align:center;
+}
+
+.add-train-container label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    text-align: left;
+    
+}
+
+.add-train-container input {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+
+
+}
+
+.add-train-container button {
+    display: block;
+    width: 50%;
+    margin: 20px auto; /* Centers the button */
+    padding: 12px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-train-container button:hover {
+    background-color: #0056b3;
+}
+
+.form-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px; /* Adjust spacing between fields */
+    padding-bottom: 30px;
+
+}
+
+.form-group {
+    flex: 1; /* Ensures both fields take equal width */
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.form-control {
+    width: 100%; /* Ensures full width inside the form-group */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+input[type="time"] {
+    background: #fff;
+    min-width: 150px;
+}
+
+input[type="time"]:invalid:before {
+    content: 'HH:MM AM/PM';
+    color: #9d9d9d;
+    position: absolute;
+    background: #fff;
+}
+
+input[type="time"]:focus:before {
+    width: 0;
+    content: '';
+}
