@@ -17,42 +17,45 @@ public class UpdateProfileServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("fullname") == null) {
-            response.sendRedirect("adminLogin.jsp");
+        if (session == null || session.getAttribute("id") == null) {
+            response.getWriter().write("Session expired. Please log in again.");
             return;
         }
 
-        String fullname = request.getParameter("fullname");
+        String userID = (String) session.getAttribute("id");
+        String name = request.getParameter("name");
+        String username = request.getParameter("username");
+        String address = request.getParameter("address");
         String email = request.getParameter("email");
-        String phone = request.getParameter("phone");
-        String password = request.getParameter("password");
-
-        String jdbcURL = "jdbc:mysql://localhost:3306/railway_db";
-        String dbUser = "root";
-        String dbPassword = "admin";
+        String phonenumber = request.getParameter("phonenumber");
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = DriverManager.getConnection(jdbcURL, dbUser, dbPassword);
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/railway_db", "root", "admin");
 
-            String sql = "UPDATE admin SET email=?, phone=?, password=? WHERE fullname=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, email);
-            ps.setString(2, phone);
-            ps.setString(3, password);
-            ps.setString(4, fullname);
-            int rowsUpdated = ps.executeUpdate();
+            String sql = "UPDATE users SET name=?, username=?, address=?, email=?, phonenumber=? WHERE id=?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            stmt.setString(2, username);
+            stmt.setString(3, address);
+            stmt.setString(4, email);
+            stmt.setString(5, phonenumber);
+            stmt.setString(6, userID);
+
+            int rowsUpdated = stmt.executeUpdate();
             conn.close();
 
             if (rowsUpdated > 0) {
-                session.setAttribute("fullname", fullname);
-                response.sendRedirect("editProfile.jsp?status=success");
+                session.setAttribute("name", name);
+                session.setAttribute("userEmail", email);
+                response.getWriter().write("Profile updated successfully.");
             } else {
-                response.sendRedirect("editProfile.jsp?status=error");
+                response.getWriter().write("Failed to update profile.");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("editProfile.jsp?status=error");
+            response.getWriter().write("Error: " + e.getMessage());
         }
     }
 }

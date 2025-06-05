@@ -1,27 +1,31 @@
+<%@ page import="java.sql.*" %>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
-<%@ page import="java.io.IOException" %>
 
 <%
-    HttpSession sessionObj = request.getSession(false); // Get session without creating a new one
-    String name = (sessionObj != null) ? (String) sessionObj.getAttribute("name") : null;
-
-    if (name == null) {
+    HttpSession sessionObj = request.getSession(false);
+    String userName = (sessionObj != null) ? (String) sessionObj.getAttribute("name") : null;
+    String userID = (sessionObj != null) ? (String) sessionObj.getAttribute("id") : null;
+    if (sessionObj == null || userName == null) {
 %>
     <script>
-        alert("Session Timed Out! Please Re-login."); // Show pop-up alert
-        window.location.href = "login.html"; // Redirect to login page
+        alert("Session expired! Please log in again.");
+        window.location.href = "login.html";
     </script>
 <%
-        return; // Stop further execution
+        return;
     }
 %>
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Railway Reservation System</title>
+    <title>Search Trains - Railway Reservation System</title>
+    <script src="js/script.js" defer></script>
+    
+ 
     
         <style>
     	html, body {
@@ -147,7 +151,7 @@
     padding: 0;
 }
 .sidebar ul li {
-    padding: 15px;
+    padding: 13px;
     margin-bottom: inherit;
     text-align: center;
 }
@@ -167,6 +171,7 @@
 	flex-grow: 1;
 	margin-top: 30px;
 }
+
 .contentcontainer {
 	margin: auto;
     width: fit-content;
@@ -175,6 +180,7 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 	color: black;
+	text-align: left;
 }
 
 .contentcontainer h1 {
@@ -184,12 +190,29 @@
     text-align:center;
 }
 
+.contentcontainer label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    text-align: left;
+    
+}
+
+.contentcontainer input {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+	margin-bottom: 10px;
+
+}
+
 .form-row {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 50px; /* Adjust spacing between fields */
-    padding-bottom: 20px;
 
 }
 
@@ -207,23 +230,32 @@
     border-radius: 5px;
 }
 
-
-input[type="time"] {
-    background: #fff;
-    min-width: 150px;
+.contentcontainer button {
+    display: block;
+    width: 50%;
+    margin: 20px auto; /* Centers the button */
+    padding: 12px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-input[type="time"]:invalid:before {
-    content: 'HH:MM AM/PM';
-    color: #9d9d9d;
-    position: absolute;
-    background: #fff;
+.contentcontainer button:hover {
+    background-color: #0056b3;
 }
 
-input[type="time"]:focus:before {
-    width: 0;
-    content: '';
-}
+select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+        }
 
     </style>
     
@@ -246,7 +278,7 @@ input[type="time"]:focus:before {
 <h3>User Panel</h3>
 </div>
 <div class="msg">
-<h3>You're logged in as <%= name %> !</h3>
+<h3>You're logged in as <%= userName %> !</h3>
 </div>
 </div>
 
@@ -256,7 +288,7 @@ input[type="time"]:focus:before {
         <ul>
             <li><a href="dashboard.jsp">Dashboard</a></li>
             <li><a href="availabilitySearch.jsp">Seat Availability</a></li>
-            <li><a href="checkPrice.jsp">Check Price</a></li>
+           <li><a href="checkPrice.jsp">Check Price</a></li>
             <li><a href="searchTrain.jsp">Book Ticket</a></li>
             <li><a href="myBookingHistory.jsp">Booking History</a></li>
             <li><a href="userViewProfile.jsp">Profile</a></li>
@@ -266,8 +298,21 @@ input[type="time"]:focus:before {
     
 <div class="upper-container">
     <div class="contentcontainer">
-        <h1>Welcome to User Panel</h1>
+        <h1>Search Your Train</h1>
+    	<form action="SearchTrainServlet" method="post">
+    <label>From Station:</label>
+    <input type="text" id="fromStation" name="fromStation" required>
+
+    <label>To Station:</label>
+    <input type="text" id ="toStation" name="toStation" required>
+
+    <label>Journey Date:</label>
+    <input type="date" id = "journeyDate" name="journeyDate" required>
+
+    <button type="submit">Search</button>
+</form>
     	
+       
     </div>
 </div>
 </div>

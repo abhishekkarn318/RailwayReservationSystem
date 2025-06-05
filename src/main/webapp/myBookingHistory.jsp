@@ -1,6 +1,6 @@
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 <%@ page import="java.io.IOException" %>
-
+<%@ page import="java.sql.*" %>
 <%
     HttpSession sessionObj = request.getSession(false); // Get session without creating a new one
     String name = (sessionObj != null) ? (String) sessionObj.getAttribute("name") : null;
@@ -21,8 +21,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Railway Reservation System</title>
-    
+    <title>My Booking History - Railway Reservation System</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <style>
     	html, body {
     margin: 0; /* Remove any default margins */
@@ -224,8 +224,102 @@ input[type="time"]:focus:before {
     width: 0;
     content: '';
 }
+/* Table Styles */
+.train-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    margin-bottom: 30px;
+}
+
+/* Table Headers */
+.train-table th {
+    background: #007bff;
+    color: white;
+    padding: 12px;
+    border: 1px solid #ddd;
+    
+}
+
+/* Table Rows */
+.train-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+    font-weight: normal;
+}
+
+/* Alternate Row Colors */
+.train-table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* Hover Effect */
+.train-table tr:hover {
+    background: #f1f1f1;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+
+    .train-table th, .train-table td {
+        padding: 8px;
+    }
+}
 
     </style>
+    
+    
+    <script>
+        $(document).ready(function() {
+            $(".showMoreBtn").click(function() {
+                const pnr = $(this).data("pnr");
+                const detailsDiv = $("#details-" + pnr);
+
+                if (detailsDiv.is(":visible")) {
+                    detailsDiv.slideUp(); // Hide if already visible
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "fetchBookingDetails.jsp",
+                        data: { pnr: pnr },
+                        success: function(response) {
+                            detailsDiv.html(response).slideDown();
+                        },
+                        error: function() {
+                            detailsDiv.html("<p style='color:red;'>Error fetching details. Try again later.</p>").slideDown();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+    $(document).ready(function() {
+        $(".cancelBtn").click(function() {
+            const pnr = $(this).data("pnr");
+
+            if (confirm("Are you sure you want to cancel this ticket?")) {
+                $.ajax({
+                    type: "POST",
+                    url: "CancelTicketServlet", // Servlet that handles cancellation
+                    data: { pnr: pnr },
+                    success: function(response) {
+                        alert(response.trim()); // Show success/error message
+                        location.reload(); // Refresh booking history after cancellation
+                    },
+                    error: function() {
+                        alert("Error canceling ticket. Please try again later.");
+                    }
+                });
+            }
+        });
+    });
+</script>
+    
     
 </head>
 <body>
@@ -266,8 +360,90 @@ input[type="time"]:focus:before {
     
 <div class="upper-container">
     <div class="contentcontainer">
-        <h1>Welcome to User Panel</h1>
-    	
+        <h1>My Booking History</h1>
+<%
+        String userEmail = (String) session.getAttribute("userEmail"); // Assuming user login session
+        if (userEmail == null) {
+            response.sendRedirect("userLogin.jsp"); // Redirect if not logged in
+            return;
+        }
+
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/railway_db", "root", "admin");
+
+            String query = "SELECT * FROM tickets WHERE email = ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, userEmail);
+            rs = ps.executeQuery();
+
+            boolean found = false;
+%>
+    <table class="train-table">
+        <tr>
+            <th>PNR No</th>
+            <th>Train No</th>
+            <th>Train Name</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Journey Date</th>
+            <th>Class</th>
+            <th>Status</th>
+            <th>Booking Time</th>
+            <th>Action</th>
+        </tr>
+
+    <%
+            while (rs.next()) {
+                found = true;
+    %>
+        <tr>
+            <td><%= rs.getInt("pnr_no") %></td>
+            <td><%= rs.getInt("train_no") %></td>
+            <td><%= rs.getString("train_name") %></td>
+            <td><%= rs.getString("source_station") %></td>
+            <td><%= rs.getString("destination_station") %></td>
+            <td><%= rs.getDate("journey_date") %></td>
+            <td><%= rs.getString("travel_class") %></td>
+            <td><%= rs.getString("status") %></td>
+            <td><%= rs.getTimestamp("booking_time") %></td>
+            <td>
+                <button class="showMoreBtn" data-pnr="<%= rs.getInt("pnr_no") %>">Show More</button>
+                <button class="cancelBtn" data-pnr="<%= rs.getInt("pnr_no") %>">Cancel Ticket</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="10">
+                <div id="details-<%= rs.getInt("pnr_no") %>" style="display: none;"></div>
+            </td>
+        </tr>
+    <%
+            }
+
+            if (!found) {
+    %>
+        <tr>
+            <td colspan="10">No booking history found.</td>
+        </tr>
+    <%
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+    %>
+        <p style="color: red;">Error: <%= e.getMessage() %></p>
+    <%
+        } finally {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            if (con != null) con.close();
+        }
+    %>
+    </table>
     </div>
 </div>
 </div>

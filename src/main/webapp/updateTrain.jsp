@@ -34,7 +34,7 @@
 
         // Create an AJAX request
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", "FetchTrainServlet?trainNumber=" + encodeURIComponent(trainNumber), true);
+        xhr.open("GET", "FetchTrainServlet?train_no=" + encodeURIComponent(train_no), true);
         
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {

@@ -16,12 +16,24 @@ public class UpdateTrainServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String trainNumber = request.getParameter("trainNumber");
-        String trainName = request.getParameter("trainName");
-        String trainSource = request.getParameter("trainSource");
-        String trainDestination = request.getParameter("trainDestination");
-        String seats = request.getParameter("seats");
-        String fare = request.getParameter("fare");
+    	String train_no = request.getParameter("trainNumber");
+        String train_name = request.getParameter("trainName");
+        String source_station = request.getParameter("trainSource");
+        String destination_station = request.getParameter("trainDestination");
+        String departure_time = request.getParameter("departureTime");
+        String arrival_time = request.getParameter("arrivalTime");
+        String sleeper_seats = request.getParameter("sleeperSeats");
+        String sleeper_available_seats = request.getParameter("sleeperAvailableSeats");
+        String third_ac_seats = request.getParameter("thirdACSeats");
+        String third_ac_available_seats = request.getParameter("thirdACAvailableSeats");
+        String second_ac_seats = request.getParameter("secondACSeats");
+        String second_ac_available_seats = request.getParameter("secondACAvailableSeats");
+        String first_ac_seats = request.getParameter("firstACSeats");
+        String first_ac_available_seats = request.getParameter("firstACAvailableSeats");
+        String sleeper_price = request.getParameter("sleeperPrice");
+        String third_ac_price = request.getParameter("thirdACPrice");
+        String second_ac_price = request.getParameter("secondACPrice");
+        String first_ac_price = request.getParameter("firstACPrice");
 
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
@@ -31,19 +43,31 @@ public class UpdateTrainServlet extends HttpServlet {
         String dbUser = "root";
         String dbPassword = "admin"; // Change this to your actual MySQL password
 
-        String sql = "UPDATE trains SET trainName=?, trainSource=?, trainDestination=?, seats=?, fare=? WHERE trainNumber=?";
+        String sql = "UPDATE trains SET train_no=?, train_name=?, source_station=?, destination_station=?, departure_time=?, arrival_time=?, sleeper_seats=?, sleeper_available_seats=?, third_ac_seats=?, third_ac_available_seats=?, second_ac_seats=?, second_ac_available_seats=?, first_ac_seats=?, first_ac_available_seats=?, sleeper_price=?, third_ac_price=?, second_ac_price=?, first_ac_price=? WHERE train_no=?";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(jdbcURL, dbUser, dbPassword);
 
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, trainName);
-            stmt.setString(2, trainSource);
-            stmt.setString(3, trainDestination);
-            stmt.setString(4, seats);
-            stmt.setString(5, fare);
-            stmt.setString(6, trainNumber);
+            stmt.setString(1, train_no);
+            stmt.setString(2, train_name);
+            stmt.setString(3, source_station);
+            stmt.setString(4, destination_station);
+            stmt.setString(5, departure_time);
+            stmt.setString(6, arrival_time);
+            stmt.setString(7, sleeper_seats);
+            stmt.setString(8, sleeper_available_seats);
+            stmt.setString(9, third_ac_seats);
+            stmt.setString(10, third_ac_available_seats);
+            stmt.setString(11, second_ac_seats);
+            stmt.setString(12, second_ac_available_seats);
+            stmt.setString(13, first_ac_seats);
+            stmt.setString(14, first_ac_available_seats);
+            stmt.setString(15, sleeper_price);
+            stmt.setString(16, third_ac_price);
+            stmt.setString(17, second_ac_price);
+            stmt.setString(18, first_ac_price);
 
             int rowsUpdated = stmt.executeUpdate();
             conn.close();

@@ -1,15 +1,11 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
+<%@ page import="java.util.List, java.util.Map" %>
 
 <%
     HttpSession sessionObj = request.getSession(false);
     String userName = (sessionObj != null) ? (String) sessionObj.getAttribute("name") : null;
     String userID = (sessionObj != null) ? (String) sessionObj.getAttribute("id") : null;
-    String userEmail = "";
-    String userPhone = "";
-    String userUserName = "";
-    String userAddress = "";
-
     if (sessionObj == null || userName == null) {
 %>
     <script>
@@ -19,24 +15,6 @@
 <%
         return;
     }
-
-    try {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/railway_db", "root", "admin");
-        PreparedStatement ps = conn.prepareStatement("SELECT name, username, address, email, phonenumber FROM users WHERE id=?");
-        ps.setString(1, userID);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-        	userName = rs.getString("name");
-        	userUserName = rs.getString("username");
-        	userAddress = rs.getString("address");
-        	userEmail = rs.getString("email");
-        	userPhone = rs.getString("phonenumber");
-        }
-        conn.close();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
 %>
 
 
@@ -45,39 +23,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile - Railway Reservation System</title>
+    <title>Search Results - Railway Reservation System</title>
     <script src="js/script.js" defer></script>
     
- <script>
-        function enableEditing() {
-            document.getElementById("name").removeAttribute("readonly");
-            document.getElementById("username").removeAttribute("readonly");
-            document.getElementById("address").removeAttribute("readonly");
-            document.getElementById("email").removeAttribute("readonly");
-            document.getElementById("phone").removeAttribute("readonly");
-            document.getElementById("editBtn").innerText = "Save";
-            document.getElementById("editBtn").setAttribute("onclick", "saveProfile()");
-        }
-        
-        function saveProfile() {
-            var name = document.getElementById("name").value;
-            var usernamename = document.getElementById("username").value;
-            var address = document.getElementById("address").value;
-            var email = document.getElementById("email").value;
-            var phone = document.getElementById("phone").value;
-            
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "UpdateProfileServlet", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    alert(xhr.responseText);
-                    location.reload();
-                }
-            };
-            xhr.send("name=" + name + "&username=" + usernamename + "&address=" + address + "&email=" + email + "&phonenumber=" + phone);
-        }
-    </script>
+ 
     
         <style>
     	html, body {
@@ -203,7 +152,7 @@
     padding: 0;
 }
 .sidebar ul li {
-    padding: 15px;
+    padding: 13px;
     margin-bottom: inherit;
     text-align: center;
 }
@@ -260,45 +209,70 @@
 
 }
 
-.form-row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 50px; /* Adjust spacing between fields */
-    padding-bottom: 30px;
-
+/* Table Styles */
+.train-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    margin-bottom: 30px;
 }
 
-.form-group {
-    flex: 1; /* Ensures both fields take equal width */
-    display: flex;
-    flex-direction: column;
+/* Table Headers */
+.train-table th {
+    background: #007bff;
+    color: white;
+    padding: 12px;
+    border: 1px solid #ddd;
     
 }
 
-.form-control {
-    width: 100%; /* Ensures full width inside the form-group */
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+/* Table Rows */
+.train-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+    font-weight: normal;
 }
 
-.btn {
-            padding: 10px 15px;
-            margin-top: 10px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .btn-primary {
-            background: #007bff;
-            color: white;
-        }
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-        
+/* Alternate Row Colors */
+.train-table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* Hover Effect */
+.train-table tr:hover {
+    background: #f1f1f1;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+
+    .train-table th, .train-table td {
+        padding: 8px;
+    }
+}
+
+.contentcontainer button {
+    display: block;
+    width: fit-content;
+    margin: 20px auto; /* Centers the button */
+    padding: 12px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.contentcontainer button:hover {
+    background-color: #0056b3;
+}
+
+
     </style>
     
 </head>
@@ -340,43 +314,76 @@
     
 <div class="upper-container">
     <div class="contentcontainer">
-        <h1>User Profile</h1>
-    	<form>
-    	<div class="form-row">
-        	<div class="form-group">
-        		<label>Id:</label>
-        		<input type="text" id="id" value="<%= userID %>" readonly>
-        	</div>
-			<div class="form-group">
-        		<label>Full Name:</label>
-        		<input type="text" id="name" value="<%= userName %>" readonly>
-        	</div>
-		</div>
-		
-		<div class="form-row">
-        	<div class="form-group">
-        		<label>Username:</label>
-        		<input type="text" id="username" value="<%= userUserName %>" readonly>
-        	</div>
-			<div class="form-group">
-        		<label>Address:</label>
-        		<input type="text" id="address" value="<%= userAddress %>" readonly>
-			</div>
-		</div>
-		
-		<div class="form-row">
-        	<div class="form-group">
-        		<label>Email:</label>
-        		<input type="email" id="email" value="<%= userEmail %>" readonly>
-			</div>
-			<div class="form-group">
-        		<label>Phone:</label>
-        		<input type="text" id="phone" value="<%= userPhone %>" readonly>
-        	</div>
-		</div>
-		<button type="button" id="editBtn" class="btn btn-primary" onclick="enableEditing()">Update Profile</button>
-    </form>
-       
+        <h1>Search Your Train</h1>
+    	<h3>Available Trains from <%= request.getAttribute("fromStation") %> to <%= request.getAttribute("toStation") %> on <%= request.getAttribute("journeyDate") %></h3>
+    	<table class="train-table">
+    <tr>
+        <th>Train No.</th>
+        <th>Train Name</th>
+        <th>Departure</th>
+        <th>Arrival</th>
+        <th>Sleeper (SL)</th>
+        <th>3<sup>rd</sup> AC (3A)</th>
+        <th>2<sup>nd</sup> AC (2A)</th>
+        <th>1<sup>st</sup> AC (1A)</th>
+        <th>Book</th>
+    </tr>
+    <%
+        Object trainsObj = request.getAttribute("trains");
+        if (trainsObj instanceof List<?>) {
+            List<?> rawList = (List<?>) trainsObj;
+            if (!rawList.isEmpty() && rawList.get(0) instanceof Map) {
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> trains = (List<Map<String, Object>>) rawList; // Safe cast
+                
+                for (Map<String, Object> train : trains) {
+                	String trainNo = train.get("trainNo").toString();
+    %>
+    <tr>
+        <td><%= train.get("trainNo") %></td>
+        <td><%= train.get("trainName") %></td>
+        <td><%= train.get("departureTime") %></td>
+        <td><%= train.get("arrivalTime") %></td>
+        <td><input type="radio" name="class_<%= trainNo %>" value="sleeper" required><%= train.get("sleeper_available_seats") %> AVL <br>Rs. <%= train.get("sleeper_price") %></td>
+        <td><input type="radio" name="class_<%= trainNo %>" value="third_ac"><%= train.get("third_ac_available_seats") %> AVL <br>Rs. <%= train.get("third_ac_price") %></td>
+        <td><input type="radio" name="class_<%= trainNo %>" value="second_ac"><%= train.get("second_ac_available_seats") %> AVL <br>Rs. <%= train.get("second_ac_price") %></td>
+        <td><input type="radio" name="class_<%= trainNo %>" value="first_ac"><%= train.get("first_ac_available_seats") %> AVL <br>Rs. <%= train.get("first_ac_price") %></td>
+        <td>
+            <form action="bookTicket.jsp" method="get" onsubmit="return validateSelection('<%= trainNo %>')">
+                <input type="hidden" name="trainNo" value="<%= trainNo %>">
+                <input type="hidden" name="trainName" value="<%= train.get("trainName") %>">
+                <input type="hidden" name="fromStation" value="<%= request.getAttribute("fromStation") %>">
+                <input type="hidden" name="departureTime" value="<%= train.get("departureTime") %>">
+                <input type="hidden" name="toStation" value="<%= request.getAttribute("toStation") %>">
+                <input type="hidden" name="arrivalTime" value="<%= train.get("arrivalTime") %>">
+                <input type="hidden" name="journeyDate" value="<%= request.getAttribute("journeyDate") %>">
+                <input type="hidden" id="selectedClass_<%= trainNo %>" name="travelClass" value="">
+				<input type="hidden" id="selectedPrice_<%= trainNo %>" name="classPrice" value="">
+                <button type="submit">Book</button>
+            </form>
+        </td>
+    </tr>
+    <%
+                }
+            }
+        }
+    %>
+</table>
+       <script>
+       function validateSelection(trainNo) {
+           let selectedClass = document.querySelector('input[name="class_' + trainNo + '"]:checked');
+           if (!selectedClass) {
+               alert("Please select a class for Train " + trainNo);
+               return false;
+           }
+           document.getElementById("selectedClass_" + trainNo).value = selectedClass.value;
+           
+           document.getElementById("selectedPrice_" + trainNo).value = selectedClass.closest('td').querySelector('br').nextSibling.textContent.trim().split("Rs. ")[1];
+           
+           return true;
+       }
+
+</script>
     </div>
 </div>
 </div>

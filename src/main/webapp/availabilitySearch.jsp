@@ -1,27 +1,58 @@
+<%@ page import="java.sql.*" %>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
-<%@ page import="java.io.IOException" %>
 
 <%
-    HttpSession sessionObj = request.getSession(false); // Get session without creating a new one
-    String name = (sessionObj != null) ? (String) sessionObj.getAttribute("name") : null;
-
-    if (name == null) {
+    HttpSession sessionObj = request.getSession(false);
+    String userName = (sessionObj != null) ? (String) sessionObj.getAttribute("name") : null;
+    String userID = (sessionObj != null) ? (String) sessionObj.getAttribute("id") : null;
+    if (sessionObj == null || userName == null) {
 %>
     <script>
-        alert("Session Timed Out! Please Re-login."); // Show pop-up alert
-        window.location.href = "login.html"; // Redirect to login page
+        alert("Session expired! Please log in again.");
+        window.location.href = "login.html";
     </script>
 <%
-        return; // Stop further execution
+        return;
     }
 %>
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Railway Reservation System</title>
+    <title>Seat Availability - Railway Reservation System</title>
+    <script src="js/script.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+ <script>
+        $(document).ready(function(){
+            $("#searchBtn").click(function(e){
+                e.preventDefault(); // Prevent form submission
+
+                let source = $("#source").val().trim();
+                let destination = $("#destination").val().trim();
+
+                if (source === "" || destination === "") {
+                    alert("Please enter both source and destination.");
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "availabilityResult.jsp",
+                    data: { source: source, destination: destination },
+                    success: function(response) {
+                        $("#result").html(response);
+                    },
+                    error: function() {
+                        $("#result").html("<p style='color:red;'>Error fetching train details. Please try again.</p>");
+                    }
+                });
+            });
+        });
+    </script>
     
         <style>
     	html, body {
@@ -147,7 +178,7 @@
     padding: 0;
 }
 .sidebar ul li {
-    padding: 15px;
+    padding: 13px;
     margin-bottom: inherit;
     text-align: center;
 }
@@ -167,6 +198,7 @@
 	flex-grow: 1;
 	margin-top: 30px;
 }
+
 .contentcontainer {
 	margin: auto;
     width: fit-content;
@@ -175,6 +207,7 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 	color: black;
+	text-align: left;
 }
 
 .contentcontainer h1 {
@@ -184,12 +217,29 @@
     text-align:center;
 }
 
+.contentcontainer label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    text-align: left;
+    
+}
+
+.contentcontainer input {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+	margin-bottom: 10px;
+
+}
+
 .form-row {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 50px; /* Adjust spacing between fields */
-    padding-bottom: 20px;
 
 }
 
@@ -207,23 +257,82 @@
     border-radius: 5px;
 }
 
+.contentcontainer button {
+    display: block;
+    width: 50%;
+    margin: 20px auto; /* Centers the button */
+    padding: 12px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
-input[type="time"] {
+.contentcontainer button:hover {
+    background-color: #0056b3;
+}
+
+select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+
+
+/* Table Styles */
+.train-table {
+    width: 100%;
+    border-collapse: collapse;
     background: #fff;
-    min-width: 150px;
+    margin-bottom: 30px;
 }
 
-input[type="time"]:invalid:before {
-    content: 'HH:MM AM/PM';
-    color: #9d9d9d;
-    position: absolute;
-    background: #fff;
+/* Table Headers */
+.train-table th {
+    background: #007bff;
+    color: white;
+    padding: 12px;
+    border: 1px solid #ddd;
+    
 }
 
-input[type="time"]:focus:before {
-    width: 0;
-    content: '';
+/* Table Rows */
+.train-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+    font-weight: normal;
 }
+
+/* Alternate Row Colors */
+.train-table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* Hover Effect */
+.train-table tr:hover {
+    background: #f1f1f1;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+
+    .train-table th, .train-table td {
+        padding: 8px;
+    }
+}
+
+
 
     </style>
     
@@ -246,7 +355,7 @@ input[type="time"]:focus:before {
 <h3>User Panel</h3>
 </div>
 <div class="msg">
-<h3>You're logged in as <%= name %> !</h3>
+<h3>You're logged in as <%= userName %> !</h3>
 </div>
 </div>
 
@@ -266,8 +375,18 @@ input[type="time"]:focus:before {
     
 <div class="upper-container">
     <div class="contentcontainer">
-        <h1>Welcome to User Panel</h1>
-    	
+        <h1>Check Seat Availability</h1>
+    	<form id="searchForm">
+        <label>From Station:</label>
+        <input type="text" id="source" name="source" required><br>
+
+        <label>To Station:</label>
+        <input type="text" id="destination" name="destination" required><br>
+
+        <button id="searchBtn">Check Availability</button>
+    </form>
+    	<br>
+       <div id="result"></div>
     </div>
 </div>
 </div>

@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("userEmail", email);
                 session.setAttribute("name", rs.getString("name"));
                 session.setAttribute("id", rs.getString("id"));
-                session.setMaxInactiveInterval(60); // 1800 seconds = 30 minutes
+                session.setMaxInactiveInterval(900); // 1800 seconds = 30 minutes
                 response.getWriter().write("success"); // Send "success" if login is correct
             } else {
                 response.getWriter().write("Incorrect email or password"); // Send error message

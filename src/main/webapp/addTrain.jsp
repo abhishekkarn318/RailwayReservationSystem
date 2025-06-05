@@ -169,7 +169,7 @@
 }
 .add-train-container {
 	margin: auto;
-    width: 50%;
+    width: max-content;
     padding: 30px;
     background: #fff;
     border-radius: 10px;
@@ -205,7 +205,7 @@
 .add-train-container button {
     display: block;
     width: 50%;
-    margin: 20px auto; /* Centers the button */
+    margin: 10px auto 0 auto; /* Centers the button */
     padding: 12px;
     font-size: 18px;
     background-color: #007bff;
@@ -224,7 +224,7 @@
     justify-content: center;
     align-items: center;
     gap: 50px; /* Adjust spacing between fields */
-    padding-bottom: 30px;
+    padding-bottom: 20px;
 
 }
 
@@ -310,30 +310,89 @@ input[type="time"]:focus:before {
             	<label for="trainNumber">Train Number:</label>
            		<input type="number" id="trainNumber" name="trainNumber" placeholder="Enter train number" required>
             </div>
-
 			<div class="form-group">
-				<label for="trainName">Train Name:</label>
-            	<input type="text" id="trainName" name="trainName" placeholder="Enter train name" required>
+				<label for="trainSource">Source:</label>
+            	<input type="text" id="trainSource" name="trainSource" placeholder="Enter source station name" required>
+           	</div>
+           	<div class="form-group">
+				<label for="departureTime">Departure Time:</label>
+            	<input type="time" id="departureTime" name="departureTime" placeholder="Enter departure time" required>
+           	</div>
+           	<div class="form-group">
+				<label for="sleeperSeats">Sleeper Seats:</label>
+            	<input type="number" id="sleeperSeats" name="sleeperSeats" placeholder="Enter total seats in sleeper" required>
            	</div>
 		</div>	
+		
 		<div class="form-row">
         	<div class="form-group">
-            	<label for="source">Source:</label>
-            	<input type="text" id="trainSource" name="trainSource" placeholder="Enter source station name" required>
+            	<label for="trainName">Train Name:</label>
+            	<input type="text" id="trainName" name="trainName" placeholder="Enter train name" required>
             </div>
 			<div class="form-group">
-            	<label for="departure">Destination:</label>
+            	<label for="trainDestination">Destination:</label>
             	<input type="text" id="trainDestination" name="trainDestination" placeholder="Enter destination station name" required>
+            </div>
+            <div class="form-group">
+				<label for="arrivalTime">Arrival Time:</label>
+            	<input type="time" id="arrivalTime" name="arrivalTime" placeholder="Enter arrival time" required>
+           	</div>
+           	<div class="form-group">
+				<label for="sleeperAvailableSeats">Sleeper Available Seats:</label>
+            	<input type="number" id="sleeperAvailableSeats" name="sleeperAvailableSeats" placeholder="Enter available seats in sleeper" required>
+           	</div>
+		</div>
+		
+		<div class="form-row">
+        	<div class="form-group">
+            	<label for="thirdACSeats">3AC Seats:</label>
+            	<input type="number" id="thirdACSeats" name="thirdACSeats" placeholder="Enter total seats in 3AC" required>
+            </div>
+			<div class="form-group">
+            	<label for="secondACSeats">2AC Seats:</label>
+            	<input type="number" id="secondACSeats" name="secondACSeats" placeholder="Enter total seats in 2AC" required>
+            </div>
+            <div class="form-group">
+            	<label for="firstACSeats">1AC Seats:</label>
+            	<input type="number" id="firstACSeats" name="firstACSeats" placeholder="Enter total seats in 1AC" required>
+            </div>
+            <div class="form-group">
+            	<label for="sleeperPrice">Sleeper Price:</label>
+            	<input type="number" id="sleeperPrice" name="sleeperPrice" placeholder="Enter price for sleeper" required>
             </div>
 		</div>
 		<div class="form-row">
         	<div class="form-group">
-            	<label for="seats">Seats:</label>
-            	<input type="number" id="seats" name="seats" placeholder="Enter seats available" required>
+            	<label for="thirdACAvailableSeats">3AC Available Seats:</label>
+            	<input type="number" id="thirdACAvailableSeats" name="thirdACAvailableSeats" placeholder="Enter available seats in 3AC" required>
             </div>
 			<div class="form-group">
-            	<label for="fare">Fare (INR):</label>
-            	<input type="number" id="fare" name="fare" placeholder="Enter journey price" required>
+            	<label for="secondACAvailableSeats">2AC Available Seats:</label>
+            	<input type="number" id="secondACAvailableSeats" name="secondACAvailableSeats" placeholder="Enter available seats in 2AC" required>
+            </div>
+            <div class="form-group">
+            	<label for="firstACAvailableSeats">1AC Available Seats:</label>
+            	<input type="number" id="firstACAvailableSeats" name="firstACAvailableSeats" placeholder="Enter available seats in 1AC" required>
+            </div>
+            <div class="form-group">
+            	<label for="thirdACPrice">3AC Price:</label>
+            	<input type="number" id="thirdACPrice" name="thirdACPrice" placeholder="Enter price for 3AC" required>
+            </div>
+		</div>
+		<div class="form-row">
+        	<div class="form-group">
+            	<label for="secondACPrice">2AC Price:</label>
+            	<input type="number" id="secondACPrice" name="secondACPrice" placeholder="Enter price for 2AC" required>
+            </div>
+			<div class="form-group">
+            	<label for="firstACPrice">1AC Price:</label>
+            	<input type="number" id="firstACPrice" name="firstACPrice" placeholder="Enter price for 1AC" required>
+            </div>
+            <div class="form-group">
+            	
+            </div>
+            <div class="form-group">
+            	
             </div>
 		</div>
 		

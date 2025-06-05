@@ -30,7 +30,7 @@ public class RemoveTrainServlet extends HttpServlet {
             Connection conn = DriverManager.getConnection(jdbcURL, dbUser, dbPassword);
 
             // Delete train
-            String sql = "DELETE FROM trains WHERE trainNumber=?";
+            String sql = "DELETE FROM trains WHERE train_no=?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, trainNumber);
             int rowsDeleted = stmt.executeUpdate();
